@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Business Card</title>
+    <style>
+      /* General Styles */
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 500px;
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: 1px solid #e3e3e3;
+        display: none; /* Initially hidden */
+      }
+
+      .tabs {
+        display: flex;
+        background-color: #f7f7f7;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #555;
+        transition: background-color 0.3s, color 0.3s;
+        height: 50px; /* Fixed height for static tabs */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .tab.active {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      .tab:hover {
+        background-color: #0056b3;
+        color: white;
+      }
+
+      .content {
+        display: none;
+        padding: 20px;
+        color: #333;
+      }
+
+      .content.active {
+        display: block;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        color: #007bff;
+        margin-bottom: 15px;
+      }
+
+      p {
+        margin: 10px 0;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .save-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .save-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .social-links a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: #007bff;
+        font-size: 18px;
+        transition: color 0.3s;
+      }
+
+      .social-links a:hover {
+        color: #0056b3;
+      }
+
+      /* Loading Animation */
+      .loading-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        background-color: #f0f4f8;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #ccc;
+        border-top: 5px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+        .card {
+          margin: 10px;
+        }
+        h2 {
+          font-size: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Loading Animation -->
+    <div class="loading-container" id="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Business Card -->
+    <div class="card" id="content">
+      <div class="tabs">
+        <div class="tab active" data-tab="1">Personal Info</div>
+        <div class="tab" data-tab="2">Business Info</div>
+        <div class="tab" data-tab="3">Social Links</div>
+      </div>
+
+      <div class="content active" id="tab-1">
+        <h2>Personal Information</h2>
+        <p><strong>Name:</strong> John Doe</p>
+        <p><strong>Contact:</strong> +123 456 7890</p>
+        <p><strong>Email:</strong> john.doe@example.com</p>
+        <p><strong>Address:</strong> 123 Main Street, Springfield</p>
+        <a href="contact.vcf" download="John_Doe.vcf" class="save-btn">Save Contact</a>
+      </div>
+
+      <div class="content" id="tab-2">
+        <h2>Business Information</h2>
+        <p><strong>Company:</strong> Doe Enterprises</p>
+        <p><strong>Position:</strong> CEO</p>
+        <p><strong>Industry:</strong> Software Development</p>
+        <p><strong>About:</strong> Providing innovative software solutions since 2010.</p>
+      </div>
+
+      <div class="content" id="tab-3">
+        <h2>Social Links</h2>
+        <div class="social-links">
+          <a href="https://linkedin.com/in/johndoe" target="_blank">LinkedIn</a>
+          <a href="https://github.com/johndoe" target="_blank">GitHub</a>
+          <a href="https://twitter.com/johndoe" target="_blank">Twitter</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Tabs Logic
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.getAttribute("data-tab");
+
+          tabs.forEach((t) => t.classList.remove("active"));
+          contents.forEach((c) => c.classList.remove("active"));
+
+          tab.classList.add("active");
+          document.getElementById(`tab-${target}`).classList.add("active");
+        });
+      });
+
+      // Loading Animation Logic
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          const loading = document.getElementById("loading");
+          const content = document.getElementById("content");
+
+          loading.style.display = "none"; // Hide loading animation
+          content.style.display = "block"; // Show the main content
+        }, 1000); // 30 seconds delay
+      });
+    </script>
+  </body>
+</html>
